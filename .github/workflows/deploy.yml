@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - master
+
+
   workflow_dispatch:
 
 permissions:
@@ -16,27 +18,37 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-      - uses: actions/setup-node@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
           node-version: '20'
           cache: npm
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+      - name: Install dependencies
+        run: npm install
 
-      - run: npm install
+      - name: Build site
+        run: npm run build
 
-      - run: npm run build
-
-      - uses: actions/upload-pages-artifact@v1
+      - name: build dir
+        run: mkdir -p .vitepress/dist && mkdir -p dist
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
         with:
-          path: docs/.vitepress/dist
+          path: dist
 
   deploy:
-    needs: build
-    runs-on: ubuntu-latest
     environment:
       name: github-pages
-      url: ${{ steps.deploy-pages.outputs.page_url }}
+      url: ${{ steps.deployment.outputs.page_url }}
+    needs: build
+    runs-on: ubuntu-latest
+    name: Deploy
     steps:
-      - id: deploy-pages
-        uses: actions/deploy-pages@v1
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
