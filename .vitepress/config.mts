@@ -94,13 +94,7 @@ export default withPwa(defineConfig({
             name: title,
             description: '',
             theme_color: '#3c963c',
-            icons: [
-                {
-                    //src: '/Documentation/assets/WinDurango.png',
-                    //sizes: '1024x1024',
-                    //type: 'image/png',
-                },
-            ],
+            icons: [],
         },
     },
 
